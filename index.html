@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Jquery-fixed-to-parent by abecoffman</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Jquery-fixed-to-parent</h1>
+        <p>Allows for a modified version of css fixed positioning, contained within a parent</p>
+
+        <p class="view"><a href="https://github.com/abecoffman/jQuery-Fixed-to-Parent">View the Project on GitHub <small>abecoffman/jQuery-Fixed-to-Parent</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/abecoffman/jQuery-Fixed-to-Parent/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/abecoffman/jQuery-Fixed-to-Parent/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/abecoffman/jQuery-Fixed-to-Parent">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="jquery-fixed-to-parent" class="anchor" href="#jquery-fixed-to-parent"><span class="octicon octicon-link"></span></a>jQuery-Fixed-to-Parent</h1>
+
+<p>This plugin allows you to fix a <em>block</em> element to the viewport, much like css fixed positioning <code>position: "fixed"</code>, but within the bounds of its parent element. It fixes the target element to the top of the viewport when scrolling down and to the bottom of the viewport when scrolling up.</p>
+
+<pre><code>$('#sidebar').fixedToParent();
+</code></pre>
+
+<p>The plugin also provides the following method calls</p>
+
+<pre><code>$('#sidebar').fixedToParent('unbind');
+$('#sidebar').fixedToParent('rebind');
+</code></pre>
+
+<p>The first of these unbinds the <em>scroll</em> and <em>resize</em> bindings that the plugin establishes, and the second of these unbinds and rebinds them.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/abecoffman">abecoffman</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
