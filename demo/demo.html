@@ -1,0 +1,90 @@
+<DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="../fixedtoparent.jquery.js"></script>
+<style type="text/css" media="screen">
+  div { box-sizing: border-box; }
+  #container { position: relative; width: 1000px; margin: 0 auto; }
+  header { height: 100px; background: #eee; margin-bottom: 20px; }
+  footer { height: 200px; background: #eee; margin-top: 20px; }
+
+  header > div { margin: 20px 0; padding: 0 20px; }
+
+  header input { width: 100px; padding: 5px; font-size: 20px; border: 1px solid #ddd; border-radius: 5px; }
+
+  #main { position: relative; width: 1000px; }
+  #main:before, #main:after { content: ' '; display: table; }
+  #main:after { clear: both; }
+
+  .left { float: left; width: 680px; }
+  .right { float: right; width: 300px; }
+
+  .panel div { text-align: center; font-size: 25px; color: #fff; }
+  .panel  div:nth-child(even) { background: #abcdef; }
+  .panel  div:nth-child(odd) { background: #fedcba; }
+
+  .panel.left  div { height: 100px;  line-height: 100px; }
+  .panel.right div { height: 50px; line-height: 50px; }
+</style>
+</head>
+<body>
+
+  <div id="container">
+
+    <header>
+      <div class="left">
+        <div>Set number of rows in column</div>
+        <input type="number" value="20" />
+      </div>
+      <div class="right">
+        <div>Set number of rows in column</div>
+        <input type="number" value="20" />
+      </div>
+    </header>
+
+    <div id="main">
+      <div class="panel left"></div>
+      <div class="panel right"></div>
+    </div>
+
+    <footer></footer>
+
+  </div>
+
+  <script type="text/javascript">
+
+    function adjustRows(element, number) {
+
+      var $el = $(element);
+      var selectNum = number;
+      var domNum = $el.children('div').length;
+      if(selectNum > domNum)
+        while(domNum < selectNum) { $('<div>', {text: ++domNum}).appendTo($el); }
+      else if(selectNum < domNum)
+        $el.children('div').slice(selectNum).remove();
+    }
+
+    $(function() {
+      var $panelLeft = $('.panel.left');
+      var $panelRight = $('.panel.right');
+
+      $("input").on('change', function() {
+        var $this = $(this);
+        var $panel = $this.parents('div:first').hasClass('right') ? $panelRight : $panelLeft;
+        adjustRows($panel, $this.val());
+        $panelRight.fixedToParent('rebind');
+      });
+
+      // setup dom
+      adjustRows($panelLeft, 20);
+      adjustRows($panelRight, 20);
+
+      // init the plugin
+      $panelRight.fixedToParent();
+    });
+
+  </script>
+
+</body>
+</html>
