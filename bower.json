@@ -1,0 +1,32 @@
+{
+  "name": "jquery-fixedtoparent",
+  "version": "0.1.0",
+  "homepage": "https://github.com/abecoffman/jQuery-Fixed-toParent",
+  "authors": [
+    "Abe Coffman <abrahm.coffman@xero.com>"
+  ],
+  "description": "jQuery plugin to fix a block element to its parent. When scrolling down it fixes target element to top of viewport, when scrolling up it fixes target element to bottom of viewport.",
+  "main": "jquery-fixedtoparent.js",
+  "keywords": [
+    "jquery",
+    "position",
+    "fixed",
+    "parent",
+    "viewport",
+    "scroll",
+    "scrolling"
+  ],
+  "dependencies": {
+    "jquery": ">1.7.0"
+  },
+  "license": "GPLv3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "demo",
+    "README.md"
+  ]
+}
