@@ -52,28 +52,28 @@
 
         // What's the current state of the panel? Use a Data attr to share this
         // value between plugins
-        var currFixedPos = $panel.data('fixedToParent');
+        var currFixedPos = $panel.data('fixedTo');
 
         // scrolling down
         if(scrollingDown && currFixedPos !== 'bottom') {
           // fixed at bottom
           if(panelBottom >= containerBottom) {
             $panel.css({position: 'absolute', top: 'auto', bottom: 0, left: panelLeftParent})
-                  .data('fixedToParent', 'bottom'); // quickly track state
+                  .data('fixedTo', 'bottom'); // quickly track state
             return true;
           }
 
           // small viewport - absolute at bottom of container
           if(winHeight < panelHeight && panelBottom < viewportBottom) {
             $panel.css({position: 'fixed', top: 'auto', bottom: 0, left: panelLeft})
-                  .data('fixedToParent', false); // quickly track state
+                  .data('fixedTo', null); // quickly track state
             return true;
           }
 
           // big viewport - fixed at top of viewport
           if(winHeight > panelHeight && containerTop < viewportTop) {
             $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft})
-                  .data('fixedToParent', false); // quickly track state
+                  .data('fixedTo', null); // quickly track state
             return true;
           }
 
@@ -84,14 +84,14 @@
           // default position
           if(panelTop <= containerTop && panelTop >= viewportTop) {
             $panel.css({position: 'static', top: 'auto', bottom: 'auto', left: 'auto'})
-                  .data('fixedToParent', 'top'); // quickly track state
+                  .data('fixedTo', 'top'); // quickly track state
             return true;
           }
 
           // fixed at top of viewport
           if(panelTop > viewportTop) {
             $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
-                  .data('fixedToParent', false);
+                  .data('fixedTo', null);
             return true;
           }
 
@@ -104,6 +104,10 @@
         winHeight = window.innerHeight || document.body.clientHeight;
         panelLeft = $panel.offset().left;
       };
+
+      this.unfix = function() {
+        $panel.css('position', 'static').data('fixedTo', null);
+      }
 
       this.init = function() {
         if(containerHeight > panelHeight) {
@@ -126,6 +130,10 @@
           $(document).unbind('scroll', instance.scroll);
           $(window).unbind('resize', instance.resize);
           action = undefined;
+        }
+
+        if(instance && action === 'unfix') {
+          instance.unfix();
         }
 
         if(action === undefined) {
