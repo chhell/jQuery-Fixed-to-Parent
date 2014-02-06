@@ -105,7 +105,9 @@
         panelLeft = $panel.offset().left;
       };
 
+      // Revert the panel back to static positioning (default styling)
       this.unfix = function() {
+        // AB: TODO: Store the original state for reverting to on init
         $panel.css('position', 'static').data('fixedTo', null);
       }
 
