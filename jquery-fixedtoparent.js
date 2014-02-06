@@ -103,12 +103,12 @@
 
         // Perform bottom-fixing if it's not already fixed and we're scrolling down
         if(scrollingDown && currFixedPos !== 'bottom') {
-          _setBottomPosition();
+          return _setBottomPosition();
         }
 
         // Perform top-fixing if it's not already fixed and we're scrolling up
         if(!scrollingDown && currFixedPos !== 'top') {
-          _setTopPosition();
+          return _setTopPosition();
         }
       };
 
@@ -129,7 +129,11 @@
       // viewport (useful for on-init)
       this.placeInViewport = function() {
         _refreshScrollStateVars();
-        _setBottomPosition();
+        if(viewportTop + panelHeight > containerBottom) {
+          _setBottomPosition();
+        } else {
+          _setTopPosition();
+        }
       }
 
       this.init = function() {
@@ -164,7 +168,7 @@
           }
         }
 
-        if(!instance) {
+        if(!action) {
           instance = new FixedToParent(this);
           $(this).data('fixedToParent', instance);
           instance.init();
