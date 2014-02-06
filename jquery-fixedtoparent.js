@@ -32,17 +32,64 @@
       // helper variables
       var scrollingDown = true;
 
-      this.scroll = function() {
-        var _scrollingDown = scrollingDown;
-        scrollingDown = $doc.scrollTop() > viewportTop;
-        var dirSwap = _scrollingDown !== scrollingDown;
-
+      // Refresh scroll state variables for use in setting fixed panel positions
+      function _refreshScrollStateVars() {
         // reset variables that may have changed
         panelTop = $panel.offset().top;
         panelTopParent = panelTop - containerTop;
         panelBottom = panelTop + panelHeight;
         viewportTop = $doc.scrollTop();
         viewportBottom = viewportTop + winHeight;
+      }
+
+      // Fix/unfix the panel to the bottom of the parent container
+      function _setBottomPosition() {
+        // fixed at bottom
+        if(panelBottom >= containerBottom) {
+          $panel.css({position: 'absolute', top: 'auto', bottom: 0, left: panelLeftParent})
+                .data('fixedTo', 'bottom'); // quickly track state
+          return true;
+        }
+
+        // small viewport - absolute at bottom of container
+        if(winHeight < panelHeight && panelBottom < viewportBottom) {
+          $panel.css({position: 'fixed', top: 'auto', bottom: 0, left: panelLeft})
+                .data('fixedTo', null); // quickly track state
+          return true;
+        }
+
+        // big viewport - fixed at top of viewport
+        if(winHeight > panelHeight && containerTop < viewportTop) {
+          $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft})
+                .data('fixedTo', null); // quickly track state
+          return true;
+        }
+      }
+
+      // Fix/unfix the panel to the top of the parent container
+      function _setTopPosition() {
+        // default position
+        if(panelTop <= containerTop && panelTop >= viewportTop) {
+          $panel.css({position: 'static', top: 'auto', bottom: 'auto', left: 'auto'})
+                .data('fixedTo', 'top'); // quickly track state
+          return true;
+        }
+
+        // fixed at top of viewport
+        if(panelTop > viewportTop) {
+          $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
+                .data('fixedTo', null);
+          return true;
+        }
+      }
+
+      this.scroll = function() {
+        var _scrollingDown = scrollingDown;
+        scrollingDown = $doc.scrollTop() > viewportTop;
+        var dirSwap = _scrollingDown !== scrollingDown;
+
+        // reset variables that may have changed
+        _refreshScrollStateVars();
 
         // when we switch scrolling directions we have to freeze the panel
         if(dirSwap && $panel.css('position') === 'fixed') {
@@ -54,47 +101,14 @@
         // value between plugins
         var currFixedPos = $panel.data('fixedTo');
 
-        // scrolling down
+        // Perform bottom-fixing if it's not already fixed and we're scrolling down
         if(scrollingDown && currFixedPos !== 'bottom') {
-          // fixed at bottom
-          if(panelBottom >= containerBottom) {
-            $panel.css({position: 'absolute', top: 'auto', bottom: 0, left: panelLeftParent})
-                  .data('fixedTo', 'bottom'); // quickly track state
-            return true;
-          }
-
-          // small viewport - absolute at bottom of container
-          if(winHeight < panelHeight && panelBottom < viewportBottom) {
-            $panel.css({position: 'fixed', top: 'auto', bottom: 0, left: panelLeft})
-                  .data('fixedTo', null); // quickly track state
-            return true;
-          }
-
-          // big viewport - fixed at top of viewport
-          if(winHeight > panelHeight && containerTop < viewportTop) {
-            $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft})
-                  .data('fixedTo', null); // quickly track state
-            return true;
-          }
-
+          _setBottomPosition();
         }
 
-        // scrolling up
+        // Perform top-fixing if it's not already fixed and we're scrolling up
         if(!scrollingDown && currFixedPos !== 'top') {
-          // default position
-          if(panelTop <= containerTop && panelTop >= viewportTop) {
-            $panel.css({position: 'static', top: 'auto', bottom: 'auto', left: 'auto'})
-                  .data('fixedTo', 'top'); // quickly track state
-            return true;
-          }
-
-          // fixed at top of viewport
-          if(panelTop > viewportTop) {
-            $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
-                  .data('fixedTo', null);
-            return true;
-          }
-
+          _setTopPosition();
         }
       };
 
@@ -111,6 +125,13 @@
         $panel.css('position', 'static').data('fixedTo', null);
       }
 
+      // Force place the DOM element into a correct position given the current
+      // viewport (useful for on-init)
+      this.placeInViewport = function() {
+        _refreshScrollStateVars();
+        _setBottomPosition();
+      }
+
       this.init = function() {
         if(containerHeight > panelHeight) {
           $doc.on('scroll', self.scroll);
@@ -123,22 +144,27 @@
       return this.each(function() {
         var instance = $(this).data('fixedToParent');
 
-        if(instance && action === 'unbind') {
-          $(document).unbind('scroll', instance.scroll);
-          $(window).unbind('resize', instance.resize);
+        if(instance) {
+          switch(action) {
+            case 'unbind':
+              $(document).unbind('scroll', instance.scroll);
+              $(window).unbind('resize', instance.resize);
+              break;
+            case 'rebind':
+              $(document).unbind('scroll', instance.scroll);
+              $(window).unbind('resize', instance.resize);
+              action = null;
+              break;
+            case 'unfix':
+              instance.unfix();
+              break;
+            case 'placeInViewport':
+              instance.placeInViewport();
+              break;
+          }
         }
 
-        if(action === 'rebind') {
-          $(document).unbind('scroll', instance.scroll);
-          $(window).unbind('resize', instance.resize);
-          action = undefined;
-        }
-
-        if(instance && action === 'unfix') {
-          instance.unfix();
-        }
-
-        if(action === undefined) {
+        if(!instance) {
           instance = new FixedToParent(this);
           $(this).data('fixedToParent', instance);
           instance.init();
