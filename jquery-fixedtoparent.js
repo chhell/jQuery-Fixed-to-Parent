@@ -50,41 +50,48 @@
           return true;
         }
 
-        // scrolling down
-        if(scrollingDown) {
+        // What's the current state of the panel? Use a Data attr to share this
+        // value between plugins
+        var currFixedPos = $panel.data('fixedToParent');
 
+        // scrolling down
+        if(scrollingDown && currFixedPos !== 'bottom') {
           // fixed at bottom
           if(panelBottom >= containerBottom) {
-            $panel.css({position: 'absolute', top: 'auto', bottom: 0, left: panelLeftParent});
+            $panel.css({position: 'absolute', top: 'auto', bottom: 0, left: panelLeftParent})
+                  .data('fixedToParent', 'bottom'); // quickly track state
             return true;
           }
 
           // small viewport - absolute at bottom of container
           if(winHeight < panelHeight && panelBottom < viewportBottom) {
-            $panel.css({position: 'fixed', top: 'auto', bottom: 0, left: panelLeft});
+            $panel.css({position: 'fixed', top: 'auto', bottom: 0, left: panelLeft})
+                  .data('fixedToParent', false); // quickly track state
             return true;
           }
 
           // big viewport - fixed at top of viewport
           if(winHeight > panelHeight && containerTop < viewportTop) {
-            $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft});
+            $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft})
+                  .data('fixedToParent', false); // quickly track state
             return true;
           }
 
         }
 
         // scrolling up
-        if(!scrollingDown) {
-
+        if(!scrollingDown && currFixedPos !== 'top') {
           // default position
           if(panelTop <= containerTop && panelTop >= viewportTop) {
-            $panel.css({position: 'static', top: 'auto', bottom: 'auto', left: 'auto'});
+            $panel.css({position: 'static', top: 'auto', bottom: 'auto', left: 'auto'})
+                  .data('fixedToParent', 'top'); // quickly track state
             return true;
           }
 
           // fixed at top of viewport
           if(panelTop > viewportTop) {
-            $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'});
+            $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
+                  .data('fixedToParent', false);
             return true;
           }
 
