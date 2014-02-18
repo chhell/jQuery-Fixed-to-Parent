@@ -8,8 +8,14 @@ describe("jqueryFixedToParent positioning", function() {
       });
     });
 
-    describe("to below the start-waypoint (within the fixed-parent-region)", function() {
+    describe("to below the start-waypoint, but above the end-waypoint", function() {
       it("should be fixed to the top of the viewport", function() {
+        pending();
+      });
+    });
+
+    describe("to below the end-waypoint", function() {
+      it("should be static", function() {
         pending();
       });
     });
@@ -21,8 +27,15 @@ describe("jqueryFixedToParent positioning", function() {
         pending();
       });
     });
-    describe("to above the end-waypoint (within the fixed-parent-region)", function() {
+    
+    describe("to above the end-waypoint, but above the end-waypoint", function() {
       it("should be fixed to the bottom of the viewport", function() {
+        pending();
+      });
+    });
+
+    describe("to above the start-waypoint", function() {
+      it("should be static", function() {
         pending();
       });
     });
