@@ -32,7 +32,7 @@ describe("jqueryFixedToParent positioning", function() {
       it("should be static", function() {
         pending();
       });
-      it("should be fixed to the bottom of the viewport", function() {
+      it("should be positioned at the bottom of the viewport", function() {
         pending();
       });
     });
