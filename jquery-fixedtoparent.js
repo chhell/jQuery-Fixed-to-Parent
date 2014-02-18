@@ -7,6 +7,7 @@
       // nodes
       var $win = $(window);
       var $doc = $(document);
+      var $body = $('body');
       var $panel = $(elem);
       var $container = $panel.parent();
 
@@ -31,6 +32,12 @@
 
       // helper variables
       var scrollingDown = true;
+
+      function _attachEventListeners() {
+        $doc.on('scroll', self.scroll);
+        $win.on('resize', self.resize);
+        $body.keyup(_onKeypress);
+      }
 
       // Refresh scroll state variables for use in setting fixed panel positions
       function _refreshScrollStateVars() {
@@ -80,6 +87,17 @@
           $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
                 .data('fixedTo', null);
           return true;
+        }
+      }
+
+      function _onKeypress(e) {
+        console.log(e);
+        if (e.keyCode == 37) {
+          // slide left
+          direction = 'prev';
+        } else if (event.keyCode == 39) {
+          // slide right
+          direction = 'next';
         }
       }
 
@@ -138,8 +156,7 @@
 
       this.init = function() {
         if(containerHeight > panelHeight) {
-          $doc.on('scroll', self.scroll);
-          $win.on('resize', self.resize);
+          _attachEventListeners();
         }
       };
     }
