@@ -27,6 +27,13 @@ describe("jqueryFixedToParent positioning", function() {
         });
       });
     });
+
+    describe("when resized", function() {
+      it("recaculates it's position", function() { 
+        pending();
+      })
+    });
+
   });
 
   describe("window smaller than fixable child content", function() {
@@ -78,5 +85,13 @@ describe("jqueryFixedToParent positioning", function() {
         });
       });
     });
+
+    describe("when resized", function() {
+      it("recaculates it's position", function() { 
+        pending();
+      })
+    });
+    
   });
+
 });
