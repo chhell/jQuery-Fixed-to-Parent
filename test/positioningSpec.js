@@ -26,8 +26,11 @@ describe("jqueryFixedToParent positioning", function() {
       it("should be static", function() {
         pending();
       });
+      it("should be fixed to the bottom of the viewport", function() {
+        pending();
+      });
     });
-    
+
     describe("to above the end-waypoint, but above the end-waypoint", function() {
       it("should be fixed to the bottom of the viewport", function() {
         pending();
