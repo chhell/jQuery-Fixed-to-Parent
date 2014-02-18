@@ -28,5 +28,8 @@
     "tests",
     "demo",
     "README.md"
-  ]
+  ],
+  "devDependencies": {
+    "jquery": ">1.7.0"
+  }
 }

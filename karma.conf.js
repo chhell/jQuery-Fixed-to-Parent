@@ -5,7 +5,7 @@ module.exports = function(config) {
   config.set({
 
     // base path, that will be used to resolve files and exclude
-    basePath: '',
+    basePath: '.',
 
 
     // frameworks to use
@@ -14,8 +14,9 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'bower_components/jquery/dist/jquery.js',
       'src/*.js',
-      'test/**/*Spec.js'
+      'test/*Spec.js'
     ],
 
 
@@ -31,7 +32,7 @@ module.exports = function(config) {
 
 
     // web server port
-    port: 9876,
+    port: 9999,
 
 
     // enable / disable colors in the output (reporters and logs)
