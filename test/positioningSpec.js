@@ -6,6 +6,9 @@ describe("jqueryFixedToParent positioning", function() {
       it("should be static", function() {
         pending();
       });
+      it("should be positioned at the top of the parent (container) DOM element", function() {
+        pending();
+      });
     });
 
     describe("to below the start-waypoint, but above the end-waypoint", function() {
@@ -16,6 +19,9 @@ describe("jqueryFixedToParent positioning", function() {
 
     describe("to below the end-waypoint", function() {
       it("should be static", function() {
+        pending();
+      });
+      it("should be positioned at the bottom of the parent (container) DOM element", function() {
         pending();
       });
     });
