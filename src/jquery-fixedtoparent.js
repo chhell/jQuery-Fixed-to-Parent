@@ -34,9 +34,9 @@
       var scrollingDown = true;
 
       function _attachEventListeners() {
-        $doc.on('scroll',   self.scroll);
+        $doc.on('scroll', self.scroll);
         $doc.on('keyup', self.keypress);
-        $win.on('resize',   self.resize);
+        $win.on('resize', self.resize);
       }
 
       // Refresh scroll state variables for use in setting fixed panel positions
