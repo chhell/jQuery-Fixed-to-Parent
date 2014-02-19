@@ -34,9 +34,9 @@
       var scrollingDown = true;
 
       function _attachEventListeners() {
-        $doc.on('scroll', self.scroll);
-        $win.on('resize', self.resize);
-        $body.keyup(_onKeypress);
+        $doc.on('scroll',   self.scroll);
+        $doc.on('keyup', self.keypress);
+        $win.on('resize',   self.resize);
       }
 
       // Refresh scroll state variables for use in setting fixed panel positions
@@ -75,7 +75,7 @@
 
       // Fix/unfix the panel to the top of the parent container
       function _setTopPosition() {
-        // default position
+        // default position at top of container
         if(panelTop <= containerTop && panelTop >= viewportTop) {
           $panel.css({position: 'static', top: 'auto', bottom: 'auto', left: 'auto'})
                 .data('fixedTo', 'top'); // quickly track state
@@ -90,15 +90,8 @@
         }
       }
 
-      function _onKeypress(e) {
-        console.log(e);
-        if (e.keyCode == 37) {
-          // slide left
-          direction = 'prev';
-        } else if (event.keyCode == 39) {
-          // slide right
-          direction = 'next';
-        }
+      self.keypress = function(e) {
+        self.placeInViewport();
       }
 
       this.scroll = function() {

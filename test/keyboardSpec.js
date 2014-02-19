@@ -4,4 +4,5 @@ describe("jqueryFixedToParent keyboard support", function() {
   it("calls scroll event on keypress", function() {
     pending();
   });
+  
 });
