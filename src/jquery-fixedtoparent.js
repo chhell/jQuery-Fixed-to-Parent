@@ -41,10 +41,20 @@
 
       // Refresh scroll state variables for use in setting fixed panel positions
       function _refreshScrollStateVars() {
+        // container positions
+        containerHeight = $container.outerHeight();
+        containerTop = $container.offset().top;
+        containerBottom = containerHeight + containerTop;
+        containerLeft = $container.offset().left;
+
         // reset variables that may have changed
         panelTop = $panel.offset().top;
         panelTopParent = panelTop - containerTop;
         panelBottom = panelTop + panelHeight;
+        panelHeight = $panel.outerHeight();
+        panelLeft = $panel.offset().left;
+        panelLeftParent = panelLeft - containerLeft;
+
         viewportTop = $doc.scrollTop();
         viewportBottom = viewportTop + winHeight;
       }
@@ -83,11 +93,18 @@
         }
 
         // fixed at top of viewport
-        if(panelTop > viewportTop) {
-          $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
+        // if(panelTop >= viewportTop) {
+        //   $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
+        //         .data('fixedTo', null);
+        //   return true;
+        // }
+
+        // if(panelTop < viewportTop) {
+
+        // }
+
+        $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
                 .data('fixedTo', null);
-          return true;
-        }
       }
 
       self.keypress = function(e) {
@@ -114,13 +131,15 @@
 
         // Perform bottom-fixing if it's not already fixed and we're scrolling down
         if(scrollingDown && currFixedPos !== 'bottom') {
-          return _setBottomPosition();
+          _setBottomPosition();
         }
 
         // Perform top-fixing if it's not already fixed and we're scrolling up
         if(!scrollingDown && currFixedPos !== 'top') {
-          return _setTopPosition();
+          _setTopPosition();
         }
+
+        return true;
       };
 
       this.resize = function() {
