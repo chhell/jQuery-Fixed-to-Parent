@@ -9,5 +9,6 @@ The plugin also provides the following method calls
 
     $('#sidebar').fixedToParent('unbind');
     $('#sidebar').fixedToParent('rebind');
+    $('#sidebar').fixedToParent('unfix'); // Reset to static positioning
 
 The first of these unbinds the _scroll_ and _resize_ bindings that the plugin establishes, and the second of these unbinds and rebinds them.
