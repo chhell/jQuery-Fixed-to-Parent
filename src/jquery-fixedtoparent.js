@@ -93,18 +93,11 @@
         }
 
         // fixed at top of viewport
-        // if(panelTop >= viewportTop) {
-        //   $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
-        //         .data('fixedTo', null);
-        //   return true;
-        // }
-
-        // if(panelTop < viewportTop) {
-
-        // }
-
-        $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
+        if(panelTop >= viewportTop) {
+          $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
                 .data('fixedTo', null);
+          return true;
+        }
       }
 
       self.keypress = function(e) {
@@ -162,7 +155,11 @@
         if(viewportTop + panelHeight > containerBottom) {
           _setBottomPosition();
         } else {
-          _setTopPosition();
+          if(!_setTopPosition()) {
+            // If it doesn't match any existing "scrolling" cases we want to stick to top
+            $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
+                  .data('fixedTo', null);
+          }
         }
       }
 
