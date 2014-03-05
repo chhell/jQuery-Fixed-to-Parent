@@ -102,7 +102,7 @@
 
       self.keypress = function(e) {
         self.placeInViewport();
-      }
+      };
 
       this.scroll = function() {
         var _scrollingDown = scrollingDown;
@@ -146,7 +146,7 @@
       this.unfix = function() {
         // AB: TODO: Store the original state for reverting to on init
         $panel.css('position', 'static').data('fixedTo', null);
-      }
+      };
 
       // Force place the DOM element into a correct position given the current
       // viewport (useful for on-init)
@@ -161,7 +161,7 @@
                   .data('fixedTo', null);
           }
         }
-      }
+      };
 
       this.init = function() {
         if(containerHeight > panelHeight) {
