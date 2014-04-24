@@ -24,15 +24,16 @@
     var containerHeight = $container.outerHeight();
     var containerTop = $container.offset().top;
     var containerBottom = containerHeight + containerTop;
-    var containerLeft = $container.offset().left;
+    var containerLeft;
 
     // panel positions
     var panelHeight = $panel.outerHeight();
     var panelTop = containerTop;
     var panelBottom = panelTop + panelHeight;
-    var panelLeft = $panel.offset().left;
     var panelTopParent = panelTop - containerTop;
-    var panelLeftParent = panelLeft - containerLeft;
+    var combinedBorderLeftWidth = 0;
+    var panelLeft;
+    var panelLeftParent;
 
     // helper variables
     var scrollingDown = true;
@@ -49,18 +50,23 @@
       containerHeight = $container.outerHeight();
       containerTop = $container.offset().top;
       containerBottom = containerHeight + containerTop;
-      containerLeft = $container.offset().left;
 
       // reset variables that may have changed
       panelHeight = $panel.outerHeight();
       panelTop = $panel.offset().top;
       panelTopParent = panelTop - containerTop;
       panelBottom = panelTop + panelHeight;
-      panelLeft = $panel.offset().left;
-      panelLeftParent = panelLeft - containerLeft;
 
       viewportTop = $doc.scrollTop();
       viewportBottom = viewportTop + winHeight;
+    }
+
+    function _refreshLeftPos() {
+      containerLeft = $container.offset().left;
+      panelLeft = $panel.offset().left;
+      combinedBorderLeftWidth = +$panel.css('border-left-width').replace('px','') + $container.css('border-left-width').replace('px','');
+      console.log(combinedBorderLeftWidth);
+      panelLeftParent = panelLeft - containerLeft - combinedBorderLeftWidth;
     }
 
     // Fix/unfix the panel to the bottom of the parent container
@@ -125,11 +131,11 @@
       // reset variables that may have changed
       _refreshScrollStateVars();
 
-      // // when we switch scrolling directions we have to freeze the panel
-      // if(dirSwap && $panel.css('position') === 'fixed') {
-      //   $panel.css({position: 'absolute', top: panelTopParent, bottom: 'auto', left: panelLeftParent});
-      //   return true;
-      // }
+      // when we switch scrolling directions we have to freeze the panel
+      if(dirSwap && $panel.css('position') === 'fixed') {
+        $panel.css({position: 'absolute', top: panelTopParent, bottom: 'auto', left: panelLeftParent});
+        return true;
+      }
 
       // What's the current state of the panel? Use a Data attr to share this
       // value between plugins
@@ -149,10 +155,10 @@
     };
 
     this.resize = function() {
+      _refreshLeftPos();
       if($panel.css('position') === 'fixed')
         $panel.css({position: 'absolute', top: panelTopParent, bottom: 'auto', left: 'auto', right: 0});
       winHeight = win.innerHeight || doc.body.clientHeight;
-      panelLeft = $panel.offset().left;
     };
 
     // Revert the panel back to static positioning (default styling)
@@ -185,6 +191,7 @@
     };
 
     this.init = function() {
+      this.resize(); // trigger initial pos math
       if(containerHeight > panelHeight) {
         attachEventListeners();
       }
