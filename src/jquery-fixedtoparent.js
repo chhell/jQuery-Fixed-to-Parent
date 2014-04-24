@@ -125,11 +125,11 @@
       // reset variables that may have changed
       _refreshScrollStateVars();
 
-      // when we switch scrolling directions we have to freeze the panel
-      if(dirSwap && $panel.css('position') === 'fixed') {
-        $panel.css({position: 'absolute', top: panelTopParent, bottom: 'auto', left: panelLeftParent});
-        return true;
-      }
+      // // when we switch scrolling directions we have to freeze the panel
+      // if(dirSwap && $panel.css('position') === 'fixed') {
+      //   $panel.css({position: 'absolute', top: panelTopParent, bottom: 'auto', left: panelLeftParent});
+      //   return true;
+      // }
 
       // What's the current state of the panel? Use a Data attr to share this
       // value between plugins
