@@ -187,7 +187,8 @@
 
       // absolute bottom
       if(scrollTop + panelHeight > containerBottom) {
-        _setBottomPosition();
+        $panel.css({position: 'absolute', top: 'auto', bottom: 0, left: panelLeftParent})
+              .data('fixedTo', 'bottom'); // quickly track state
         return;
       }
 
