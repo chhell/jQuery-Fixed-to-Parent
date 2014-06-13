@@ -124,8 +124,9 @@
     };
 
     this.scroll = function() {
+      var scrollTop = $win.scrollTop();
       var _scrollingDown = scrollingDown;
-      scrollingDown = $doc.scrollTop() > viewportTop;
+      scrollingDown = scrollTop > viewportTop;
       var dirSwap = _scrollingDown !== scrollingDown;
 
       // reset variables that may have changed
@@ -133,7 +134,11 @@
 
       // when we switch scrolling directions we have to freeze the panel
       if(dirSwap && $panel.css('position') === 'fixed') {
-        $panel.css({position: 'absolute', top: panelTopParent, bottom: 'auto', left: panelLeftParent});
+        if(scrollTop < containerTop) {
+          _setTopPosition();  
+        } else {
+          $panel.css({position: 'absolute', top: panelTopParent, bottom: 'auto', left: panelLeftParent});  
+        }
         return true;
       }
 
@@ -162,8 +167,9 @@
     };
 
     // Revert the panel back to static positioning (default styling)
-    this.unfix = function() {
-      $panel.css('position', 'static').data('fixedTo', null);
+    this.setPosUnfixed = function() {
+      $panel.css('position', 'static')
+            .data('fixedTo', null);
     };
 
     // Force place the DOM element into a correct position given the current
@@ -175,19 +181,18 @@
 
       // default positioning (do nothing)
       if(scrollTop < containerTop) {
+        this.setPosUnfixed();
         return;
       }
 
       // absolute bottom
       if(scrollTop + panelHeight > containerBottom) {
-        $panel.css({position: 'absolute', top: 'auto', bottom: 0, left: panelLeftParent})
-              .data('fixedTo', 'bottom'); // quickly track state
+        _setBottomPosition();
         return;
       }
 
       // fixed top
-      $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
-                .data('fixedTo', null);
+      _setTopPosition();
     };
 
     this.init = function() {
@@ -215,7 +220,7 @@
             action = null;
             break;
           case 'unfix':
-            instance.unfix();
+            instance.setPosUnfixed();
             break;
           case 'placeInViewport':
             instance.placeInViewport();
