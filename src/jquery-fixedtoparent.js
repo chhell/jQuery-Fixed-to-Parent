@@ -1,4 +1,4 @@
-// v0.1.19
+// v0.1.10
 (function($, win, doc) {
 
   'use strict';
@@ -104,7 +104,8 @@
       }
 
       // fixed at top of viewport
-      if($panel.css('position') !== 'fixed' && (viewportTop <= panelTop) && (panelBottom <= containerBottom)) {
+      if($panel.css('position') !== 'fixed' && 
+         ((viewportTop <= panelTop) && (panelBottom <= containerBottom))) {
         $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
               .data('fixedTo', null);
         return true;
@@ -190,8 +191,17 @@
         return;
       }
 
-      // fixed top
-      _onScrollUp();
+      var currFixedPos = $panel.data('fixedTo');
+
+      // Perform bottom-fixing if it's not already fixed and we're scrolling down
+      if(currFixedPos !== 'bottom') {
+        _onScrollDown();
+      }
+
+      // Perform top-fixing if it's not already fixed and we're scrolling up
+      if(currFixedPos !== 'top') {
+        _onScrollUp();
+      }
     };
 
     this.init = function() {
