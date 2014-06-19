@@ -1,4 +1,4 @@
-// v0.1.18
+// v0.1.19
 (function($, win, doc) {
 
   'use strict';
