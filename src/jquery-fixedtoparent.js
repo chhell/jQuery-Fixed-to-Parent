@@ -1,3 +1,4 @@
+// v0.1.19
 (function($, win, doc) {
 
   'use strict';
@@ -39,9 +40,9 @@
     var scrollingDown = true;
 
     function attachEventListeners() {
-      $doc.on('scroll', self.scroll);
-      $doc.on('keyup', self.keypress);
-      $win.on('resize', self.resize);
+      $doc.on('scroll', self.onScroll);
+      $doc.on('keyup', self.onKeyUp);
+      $win.on('resize', self.onResize);
     }
 
     // Refresh scroll state variables for use in setting fixed panel positions
@@ -70,7 +71,7 @@
     }
 
     // Fix/unfix the panel to the bottom of the parent container
-    function _setBottomPosition() {
+    function _onScrollDown() {
       // stick to bottom of container
       if(panelBottom >= containerBottom) {
         $panel.css({position: 'absolute', top: 'auto', bottom: 0, left: panelLeftParent})
@@ -94,7 +95,7 @@
     }
 
     // Fix/unfix the panel to the top of the parent container
-    function _setTopPosition() {
+    function _onScrollUp() {
       // default position at top of container
       if(panelTop <= containerTop && panelTop >= viewportTop) {
         $panel.css({position: 'static', top: 'auto', bottom: 'auto', left: 'auto'})
@@ -103,7 +104,7 @@
       }
 
       // fixed at top of viewport
-      if(panelTop >= viewportTop) {
+      if($panel.css('position') !== 'fixed' && (viewportTop <= panelTop) && (panelBottom <= containerBottom)) {
         $panel.css({position: 'fixed', top: 0, bottom: 'auto', left: panelLeft, right: 'auto'})
               .data('fixedTo', null);
         return true;
@@ -119,11 +120,11 @@
       left: $panel.css('left') || 'auto'
     };
 
-    this.keypress = function(e) {
+    this.onKeyUp = function(e) {
       self.placeInViewport();
     };
 
-    this.scroll = function() {
+    this.onScroll = function() {
       var scrollTop = $win.scrollTop();
       var _scrollingDown = scrollingDown;
       scrollingDown = scrollTop > viewportTop;
@@ -134,11 +135,7 @@
 
       // when we switch scrolling directions we have to freeze the panel
       if(dirSwap && $panel.css('position') === 'fixed') {
-        if(scrollTop < containerTop) {
-          _setTopPosition();  
-        } else {
-          $panel.css({position: 'absolute', top: panelTopParent, bottom: 'auto', left: panelLeftParent});  
-        }
+        $panel.css({position: 'absolute', top: panelTopParent, bottom: 'auto', left: panelLeftParent});  
         return true;
       }
 
@@ -148,21 +145,22 @@
 
       // Perform bottom-fixing if it's not already fixed and we're scrolling down
       if(scrollingDown && currFixedPos !== 'bottom') {
-        _setBottomPosition();
+        _onScrollDown();
       }
 
       // Perform top-fixing if it's not already fixed and we're scrolling up
       if(!scrollingDown && currFixedPos !== 'top') {
-        _setTopPosition();
+        _onScrollUp();
       }
 
       return true;
     };
 
-    this.resize = function() {
+    this.onResize = function() {
       _refreshLeftPos();
-      if($panel.css('position') === 'fixed')
+      if($panel.css('position') === 'fixed') {
         $panel.css({position: 'absolute', top: panelTopParent, bottom: 'auto', left: 'auto', right: 0});
+      }
       winHeight = win.innerHeight || doc.body.clientHeight;
     };
 
@@ -193,11 +191,11 @@
       }
 
       // fixed top
-      _setTopPosition();
+      _onScrollUp();
     };
 
     this.init = function() {
-      this.resize(); // trigger initial pos math
+      this.onResize(); // trigger initial pos math
       if(containerHeight > panelHeight) {
         attachEventListeners();
       }
@@ -212,12 +210,12 @@
         switch(action) {
           case 'unbind':
             $doc.unbind('scroll', instance.scroll);
-            $win.unbind('resize', instance.resize);
+            $win.unbind('resize', instance.onResize);
             $(this).css(instance.defaultCss);
             break;
           case 'rebind':
             $doc.unbind('scroll', instance.scroll);
-            $win.unbind('resize', instance.resize);
+            $win.unbind('resize', instance.onResize);
             action = null;
             break;
           case 'unfix':
